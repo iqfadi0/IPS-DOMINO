@@ -1,12 +1,61 @@
-<!-- templates/dashboard.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - Maintenance</title>
+  <style>
+    body {
+      background: #f0f3f5;
+      color: #333;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .dashboard-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px 60px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+      max-width: 500px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #3a86ff;
+    }
+    p {
+      font-size: 1.1em;
+      color: #555;
+      line-height: 1.6;
+    }
+    a.logout-btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 30px;
+      background: #ff4b5c;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    a.logout-btn:hover {
+      background: #e03e4a;
+    }
+  </style>
 </head>
 <body>
-  <h2>Welcome to Customer Maintenance Dashboard</h2>
-  <a href="/change-password">Change Password</a>
+  <div class="dashboard-box">
+    <h1>Maintenance Mode</h1>
+    <p>Welcome to the dashboard. The system is currently under maintenance.</p>
+    <p>Please check back later or contact the administrator for assistance.</p>
+    <a href="/" class="logout-btn">Logout</a>
+  </div>
 </body>
 </html>
