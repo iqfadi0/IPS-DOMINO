@@ -4,24 +4,22 @@
 <meta charset="UTF-8" />
 <title>Edit Customer</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
-  form { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 0 10px #ccc; }
-  input[type=text], input[type=date] { width: 100%; padding: 8px; margin: 8px 0; border-radius: 4px; border: 1px solid #ccc; }
-  button { padding: 10px 15px; border:none; background: #007bff; color: white; border-radius: 4px; cursor: pointer; }
+  body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 40px; }
+  .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
+  input[type=text], input[type=date] { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc; }
+  button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
   button:hover { background: #0056b3; }
-  a { display: inline-block; margin-top: 10px; }
+  a { display: inline-block; margin-top: 10px; color: #007bff; text-decoration: none; }
 </style>
 </head>
 <body>
-<form method="POST">
+<div class="container">
   <h2>Edit Customer</h2>
-  <label>Name:</label>
-  <input type="text" name="name" value="{{ customer[1] }}" required>
-  <label>End Date:</label>
-  <input type="date" name="end_date" value="{{ customer[3] }}" required>
-  <button type="submit">Save</button>
-</form>
-<div style="text-align:center;">
+  <form method="POST">
+    <input type="text" name="name" value="{{ customer[1] }}" placeholder="Customer Name" required>
+    <input type="date" name="end_date" value="{{ customer[3] }}" required>
+    <button type="submit">Save Changes</button>
+  </form>
   <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
 </div>
 </body>
