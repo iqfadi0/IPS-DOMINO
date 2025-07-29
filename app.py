@@ -3,7 +3,7 @@ import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # غيّرها لكلمة سر قوية للإنتاج
+app.secret_key = 'your_super_secret_key'  # غيّرها بكلمة سر قوية
 
 # كلمات السر والدور
 users = {
@@ -22,15 +22,31 @@ def init_db():
                 end_date TEXT NOT NULL
             )
         ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS app_password (
+                id INTEGER PRIMARY KEY,
+                password TEXT NOT NULL
+            )
+        ''')
+        # حط كلمة المرور الافتراضية للباسورد اللي يغيره الادمن
+        c.execute("INSERT OR IGNORE INTO app_password (id, password) VALUES (1, 'Fadi!!@@')")
         conn.commit()
+
+@app.before_first_request
+def setup():
+    init_db()
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error = ''
     if request.method == 'POST':
         password = request.form.get('password')
-        # تحقق من كلمة السر
-        if password == users['admin']:
+        with sqlite3.connect('database.db') as conn:
+            c = conn.cursor()
+            c.execute("SELECT password FROM app_password WHERE id=1")
+            admin_password = c.fetchone()[0]
+
+        if password == admin_password:
             session['logged_in'] = True
             session['role'] = 'admin'
             return redirect(url_for('dashboard'))
@@ -112,11 +128,26 @@ def delete(id):
 
     return redirect(url_for('dashboard'))
 
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if not session.get('logged_in') or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    message = ''
+    if request.method == 'POST':
+        new_password = request.form.get('new_password').strip()
+        if new_password:
+            with sqlite3.connect('database.db') as conn:
+                c = conn.cursor()
+                c.execute("UPDATE app_password SET password=? WHERE id=1", (new_password,))
+                conn.commit()
+            message = 'Password changed successfully.'
+    return render_template('change_password.html', message=message)
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)
