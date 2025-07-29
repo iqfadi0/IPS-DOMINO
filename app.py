@@ -1,14 +1,22 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+# كلمة المرور الثابتة - غيرها حسب حاجتك
+CORRECT_PASSWORD = "Fadi!!@@"
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    error = request.args.get('error')  # نمرر رسالة الخطأ عبر الرابط لو موجودة
+    return render_template("index.html", error=error)
 
 @app.route("/login", methods=["POST"])
 def login():
-    return redirect("/dashboard")
+    password = request.form.get("password")
+    if password == CORRECT_PASSWORD:
+        return redirect("/dashboard")
+    else:
+        return redirect(url_for("index", error="Invalid password. Please try again."))
 
 @app.route("/dashboard")
 def dashboard():
@@ -17,7 +25,7 @@ def dashboard():
 @app.route("/change-password", methods=["GET", "POST"])
 def change_password():
     if request.method == "POST":
-        # Change password logic here
+        # منطق تغيير كلمة المرور (مؤقت - تحتاج تضيف تخزين حقيقي)
         return redirect("/dashboard")
     return render_template("change_password.html")
 
