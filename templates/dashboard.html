@@ -1,36 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="rtl">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dashboard</title>
 <style>
-  /* Reset بسيط */
-  * {
-    box-sizing: border-box;
-  }
-
   body {
     font-family: Arial, sans-serif;
     background: #f7f7f7;
-    padding: 15px;
-    margin: 0;
+    padding: 20px;
+    direction: rtl;
   }
-
-  h1 {
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    text-align: center;
-  }
-
   .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
     flex-wrap: wrap;
+    margin-bottom: 15px;
   }
-
+  h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
   .logout {
     background-color: #dc3545;
     color: white;
@@ -39,7 +30,6 @@
     text-decoration: none;
     font-weight: bold;
   }
-
   form.search-form, form.add-form {
     display: flex;
     gap: 10px;
@@ -47,7 +37,6 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-
   input[type=text] {
     padding: 10px;
     border-radius: 6px;
@@ -55,7 +44,6 @@
     flex: 1 1 250px;
     font-size: 1rem;
   }
-
   button {
     padding: 10px 20px;
     border: none;
@@ -68,81 +56,65 @@
     font-size: 1rem;
     min-width: 100px;
   }
-
   button:hover {
     background: #218838;
   }
-
   table {
     width: 100%;
     border-collapse: collapse;
     background: white;
     font-size: 0.9rem;
   }
-
   th, td {
     padding: 12px 10px;
     border: 1px solid #ccc;
-    text-align: left;
+    text-align: right;
   }
-
   th {
     background: #343a40;
     color: white;
   }
-
   a.edit-btn, a.delete-btn {
     padding: 7px 12px;
     border-radius: 6px;
     color: white;
     text-decoration: none;
     font-size: 0.85rem;
-    margin-right: 6px;
+    margin-left: 6px;
   }
-
   a.edit-btn {
     background: #007bff;
   }
-
   a.delete-btn {
     background: #dc3545;
   }
-
   a.edit-btn:hover {
     background: #0056b3;
   }
-
   a.delete-btn:hover {
     background: #b02a37;
   }
-
-  /* Responsive adjustments */
   @media (max-width: 600px) {
     .top-bar {
       flex-direction: column;
       gap: 10px;
       align-items: stretch;
     }
-
     form.search-form, form.add-form {
       flex-direction: column;
       gap: 10px;
     }
-
     input[type=text], button {
       flex: 1 1 100%;
       min-width: auto;
     }
-
     table, thead, tbody, th, td, tr {
       display: block;
       width: 100%;
     }
-
     thead tr {
-      display: none; /* اخفي رؤوس الجدول على الموبايل */
+      display: none;
     }
-
     tbody tr {
       margin-bottom: 15px;
       background: #fff;
@@ -150,84 +122,8 @@
       box-shadow: 0 0 8px #ccc;
       padding: 15px;
     }
-
     tbody td {
       padding: 10px 5px;
       text-align: right;
       position: relative;
-      padding-left: 50%;
-      border: none;
-      border-bottom: 1px solid #eee;
-    }
-
-    tbody td::before {
-      content: attr(data-label);
-      position: absolute;
-      left: 15px;
-      width: 45%;
-      padding-left: 10px;
-      font-weight: bold;
-      text-align: left;
-    }
-
-    tbody td:last-child {
-      border-bottom: 0;
-    }
-
-    a.edit-btn, a.delete-btn {
-      font-size: 1rem;
-      margin: 5px 5px 0 0;
-      display: inline-block;
-      width: 48%;
-      text-align: center;
-    }
-  }
-</style>
-</head>
-<body>
-
-<div class="top-bar">
-  <h1>Customer Maintenance Dashboard</h1>
-  <a href="{{ url_for('logout') }}" class="logout">Logout</a>
-</div>
-
-<form method="GET" action="{{ url_for('dashboard') }}" class="search-form">
-  <input type="text" name="search_name" placeholder="Search by name" value="{{ search_name|default('') }}">
-  <button type="submit">Search</button>
-</form>
-
-{% if role in ['admin', 'user'] %}
-<form method="POST" class="add-form">
-  <input type="text" name="name" placeholder="Customer Name" required>
-  <button type="submit">Add Customer</button>
-</form>
-{% endif %}
-
-<table>
-  <thead>
-    <tr>
-      <th>ID</th><th>Name</th><th>Start Date</th><th>End Date</th><th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for c in customers %}
-    <tr>
-      <td data-label="ID">{{ c[0] }}</td>
-      <td data-label="Name">{{ c[1] }}</td>
-      <td data-label="Start Date">{{ c[2] }}</td>
-      <td data-label="End Date">{{ c[3] }}</td>
-      <td data-label="Actions">
-        <a href="{{ url_for('edit', id=c[0]) }}" class="edit-btn">Edit</a>
-        {% if role == 'admin' %}
-        <a href="{{ url_for('delete', id=c[0]) }}" class="delete-btn" onclick="return confirm('Are you sure?')">Delete</a>
-        {% endif %}
-      </td>
-    </tr>
-    {% else %}
-    <tr><td colspan="5" style="text-align:center;">No customers found.</td></tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-</body>
-</html>
+      padding-left:
