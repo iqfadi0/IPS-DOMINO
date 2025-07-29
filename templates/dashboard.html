@@ -1,44 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dashboard</title>
+<meta charset="UTF-8" />
+<title>Dashboard</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#121212; color:#eee; padding:20px; }
+  header { display:flex; justify-content: space-between; align-items:center; margin-bottom:20px; }
+  a.logout { background:#ff4b5c; padding:10px 20px; color:#fff; border-radius:6px; text-decoration:none; }
+  form { margin-bottom: 20px; }
+  input[type=text], input[type=tel], input[type=date] { padding:10px; border-radius:6px; border:none; margin-right:10px; }
+  button { padding:10px 20px; border:none; border-radius:6px; background:#4caf50; color:#fff; cursor:pointer; }
+  table { width:100%; border-collapse: collapse; }
+  th, td { padding:12px; border-bottom: 1px solid #444; text-align:center; }
+  tr:hover { background:#333; }
+  a.action-btn { background:#ff6f61; padding:6px 12px; border-radius:6px; color:#fff; text-decoration:none; margin:0 5px; }
+  a.action-btn.delete { background:#c0392b; }
+  form.search-form { margin-bottom: 20px; }
+  input.search-input { padding:10px; border-radius:6px; border:none; width: 300px; margin-right: 10px;}
+</style>
 </head>
 <body>
-  <h2>Welcome to Dashboard</h2>
-  <p><a href="{{ url_for('logout') }}">Logout</a> | <a href="{{ url_for('search') }}">Search Customer</a></p>
+<header>
+  <h1>Customer Dashboard (Role: {{ role }})</h1>
+  <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+</header>
 
-  <h3>Add Customer</h3>
-  <form method="POST">
-    <input type="text" name="name" placeholder="Customer Name" required />
-    <button type="submit">Add</button>
-  </form>
+<form method="GET" action="{{ url_for('dashboard') }}" class="search-form">
+  <input type="text" name="search_name" placeholder="Search by Customer Name" class="search-input" value="{{ request.args.get('search_name', '') }}" />
+  <button type="submit">Search</button>
+</form>
 
-  <h3>Customers List</h3>
-  <table border="1" cellpadding="6" cellspacing="0">
+<form method="POST">
+  <input type="text" name="name" placeholder="Customer Name" required />
+  <input type="tel" name="phone" placeholder="Phone Number" required />
+  <button type="submit">Add Customer</button>
+</form>
+
+<table>
+  <thead>
     <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Actions</th>
+      <th>ID</th><th>Name</th><th>Phone</th><th>Start Date</th><th>End Date</th><th>Actions</th>
     </tr>
-    {% for cust in customers %}
+  </thead>
+  <tbody>
+    {% for c in customers %}
     <tr>
-      <td>{{ cust.id }}</td>
-      <td>{{ cust.name }}</td>
-      <td>{{ cust.start_date }}</td>
-      <td>{{ cust.end_date }}</td>
+      <td>{{ c[0] }}</td>
+      <td>{{ c[1] }}</td>
+      <td>{{ c[2] }}</td>
+      <td>{{ c[3] }}</td>
+      <td>{{ c[4] }}</td>
       <td>
-        <a href="{{ url_for('edit', id=cust.id) }}">Edit</a>
+        <a href="{{ url_for('edit', id=c[0]) }}" class="action-btn">Edit</a>
         {% if role == 'admin' %}
-        | <a href="{{ url_for('delete', id=cust.id) }}" onclick="return confirm('Are you sure?');">Delete</a>
+        <a href="{{ url_for('delete', id=c[0]) }}" class="action-btn delete" onclick="return confirm('Confirm delete?');">Delete</a>
         {% endif %}
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="5">No customers yet.</td></tr>
+    <tr><td colspan="6">No customers found.</td></tr>
     {% endfor %}
-  </table>
+  </tbody>
+</table>
 </body>
 </html>
