@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Edit Customer</title>
+<meta charset="UTF-8" />
+<title>Edit Customer</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#222; color:#eee; padding:20px; }
+  form { max-width:400px; margin:auto; background:#333; padding:20px; border-radius:8px; }
+  input[type=text], input[type=tel], input[type=date] { width:100%; padding:10px; margin-bottom:15px; border-radius:6px; border:none; }
+  button { width:100%; padding:10px; background:#4caf50; border:none; border-radius:6px; color:#fff; font-weight:bold; cursor:pointer; }
+  a { color:#eee; display:block; margin-bottom:20px; text-align:center; text-decoration:none; }
+</style>
 </head>
 <body>
-  <h2>Edit Customer</h2>
+  <a href="{{ url_for('dashboard') }}">&larr; Back to Dashboard</a>
   <form method="POST">
-    <input type="text" name="name" value="{{ customer.name }}" required />
+    <h2>Edit Customer</h2>
+    <input type="text" name="name" value="{{ customer[1] }}" required />
+    <input type="tel" name="phone" value="{{ customer[2] }}" required />
+    <label>End Date:</label>
+    <input type="date" name="end_date" value="{{ customer[4] }}" required />
     <button type="submit">Save</button>
   </form>
-  <br />
-  <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
 </body>
 </html>
