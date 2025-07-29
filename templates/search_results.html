@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Search Results</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#121212; color:#eee; padding:20px; }
+  a { color:#4caf50; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px;}
+  th, td { padding: 10px; border-bottom: 1px solid #444; text-align:center; }
+</style>
+</head>
+<body>
+  <h1>Search Results for "{{ search_name }}"</h1>
+  {% if results %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Start Date</th><th>End Date</th></tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No customers found with that name.</p>
+  {% endif %}
+  <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
+</body>
+</html>
