@@ -1,74 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard - Maintenance</title>
-  <style>
-    body {
-      background: #121212;
-      color: #eee;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #242424;
-      padding: 15px 30px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-    }
-    header h1 {
-      margin: 0;
-      font-weight: 700;
-    }
-    a.logout-btn {
-      background: #ff4b5c;
-      color: white;
-      padding: 10px 18px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    a.logout-btn:hover {
-      background: #e03e4a;
-    }
-    main {
-      text-align: center;
-      font-size: 1.3em;
-      padding: 40px;
-      background: #1f1f2e;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #0009;
-    }
-    a.change-pass {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #4caf50;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background 0.3s ease;
-    }
-    a.change-pass:hover {
-      background: #45a049;
-    }
-  </style>
-</head>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>Dashboard</title></head>
 <body>
-  <header>
-    <h1>Welcome to Customer Maintenance Dashboard</h1>
-    <a href="/logout" class="logout-btn">Logout</a>
-  </header>
-  <main>
-    <p>This is your maintenance dashboard.</p>
-    <a href="/change-password" class="change-pass">Change Password</a>
-  </main>
+  <h2>Welcome to the Dashboard</h2>
+  <p><a href="{{ url_for('change_password') }}">Change Password</a> | <a href="{{ url_for('logout') }}">Logout</a></p>
+  <p>System is currently under maintenance.</p>
 </body>
 </html>
