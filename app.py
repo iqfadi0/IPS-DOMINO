@@ -3,10 +3,14 @@ import sqlite3
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'  # غيّرها لكلمة سر قوية
+app.secret_key = 'your_secret_key_here'  # غيّرها لكلمة سر قوية للإنتاج
 
-# تهيئة قاعدة البيانات مرة واحدة
-initialized = False
+# كلمات السر والدور
+users = {
+    'admin': 'Fadi!!@@',
+    'user': 'ips@2025'
+}
+
 def init_db():
     with sqlite3.connect('database.db') as conn:
         c = conn.cursor()
@@ -14,38 +18,25 @@ def init_db():
             CREATE TABLE IF NOT EXISTS customers (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                phone TEXT NOT NULL,
                 start_date TEXT NOT NULL,
                 end_date TEXT NOT NULL
             )
         ''')
         conn.commit()
 
-@app.before_request
-def initialize():
-    global initialized
-    if not initialized:
-        init_db()
-        initialized = True
-
-# كلمات السر
-PASSWORDS = {
-    'user': 'ips@2025',   # مستخدم عادي
-    'admin': 'Fadi!!@@'   # أدمن
-}
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error = ''
     if request.method == 'POST':
-        password = request.form.get('password', '')
-        if password == PASSWORDS['user']:
-            session['logged_in'] = True
-            session['role'] = 'user'
-            return redirect(url_for('dashboard'))
-        elif password == PASSWORDS['admin']:
+        password = request.form.get('password')
+        # تحقق من كلمة السر
+        if password == users['admin']:
             session['logged_in'] = True
             session['role'] = 'admin'
+            return redirect(url_for('dashboard'))
+        elif password == users['user']:
+            session['logged_in'] = True
+            session['role'] = 'user'
             return redirect(url_for('dashboard'))
         else:
             error = 'Invalid password'
@@ -58,34 +49,31 @@ def dashboard():
 
     role = session.get('role')
 
-    # إضافة زبون
     if request.method == 'POST':
-        name = request.form.get('name')
-        phone = request.form.get('phone')
-        start_date = datetime.now()
-        end_date = start_date + timedelta(days=60)  # انتهاء بعد شهرين
-        start_date_str = start_date.strftime("%Y-%m-%d")
-        end_date_str = end_date.strftime("%Y-%m-%d")
+        name = request.form.get('name').strip()
+        if name:
+            start_date = datetime.now()
+            end_date = start_date + timedelta(days=60)
+            start_date_str = start_date.strftime("%Y-%m-%d")
+            end_date_str = end_date.strftime("%Y-%m-%d")
 
-        with sqlite3.connect('database.db') as conn:
-            c = conn.cursor()
-            c.execute("INSERT INTO customers (name, phone, start_date, end_date) VALUES (?, ?, ?, ?)",
-                      (name, phone, start_date_str, end_date_str))
-            conn.commit()
+            with sqlite3.connect('database.db') as conn:
+                c = conn.cursor()
+                c.execute("INSERT INTO customers (name, start_date, end_date) VALUES (?, ?, ?)",
+                          (name, start_date_str, end_date_str))
+                conn.commit()
 
-    # جلب الزبائن
     search_name = request.args.get('search_name', '').strip()
+
     with sqlite3.connect('database.db') as conn:
         c = conn.cursor()
         if search_name:
-            c.execute("SELECT name, start_date, end_date FROM customers WHERE name LIKE ?", ('%' + search_name + '%',))
-            results = c.fetchall()
-            return render_template('search_results.html', results=results, search_name=search_name)
+            c.execute("SELECT id, name, start_date, end_date FROM customers WHERE name LIKE ?", ('%'+search_name+'%',))
         else:
-            c.execute("SELECT * FROM customers")
-            customers = c.fetchall()
+            c.execute("SELECT id, name, start_date, end_date FROM customers")
+        customers = c.fetchall()
 
-    return render_template('dashboard.html', customers=customers, role=role)
+    return render_template('dashboard.html', customers=customers, role=role, search_name=search_name)
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
@@ -93,21 +81,22 @@ def edit(id):
         return redirect(url_for('login'))
 
     role = session.get('role')
-    if role not in ['user', 'admin']:
-        return redirect(url_for('login'))
 
     with sqlite3.connect('database.db') as conn:
         c = conn.cursor()
         if request.method == 'POST':
-            name = request.form.get('name')
-            phone = request.form.get('phone')
-            end_date = request.form.get('end_date')
-            c.execute("UPDATE customers SET name=?, phone=?, end_date=? WHERE id=?", (name, phone, end_date, id))
-            conn.commit()
-            return redirect(url_for('dashboard'))
+            name = request.form.get('name').strip()
+            end_date = request.form.get('end_date').strip()
+            if name and end_date:
+                c.execute("UPDATE customers SET name=?, end_date=? WHERE id=?", (name, end_date, id))
+                conn.commit()
+                return redirect(url_for('dashboard'))
 
-        c.execute("SELECT * FROM customers WHERE id=?", (id,))
+        c.execute("SELECT id, name, start_date, end_date FROM customers WHERE id=?", (id,))
         customer = c.fetchone()
+
+    if not customer:
+        return "Customer not found", 404
 
     return render_template('edit.html', customer=customer, role=role)
 
@@ -128,5 +117,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+if __name__ == '__main__':
+    init_db()
+    app.run(host='0.0.0.0', port=5000, debug=True)
