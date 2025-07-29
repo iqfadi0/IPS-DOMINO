@@ -7,7 +7,7 @@
   <style>
     body {
       background: #121212;
-      color: #fff;
+      color: #eee;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
@@ -15,64 +15,54 @@
       height: 100vh;
       margin: 0;
     }
-    .login-container {
-      background: #1e1e1e;
-      padding: 40px 50px;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    .login-box {
+      background: #1f1f2e;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #0008;
       width: 320px;
       text-align: center;
     }
-    h2 {
-      margin-bottom: 25px;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-    }
     input[type="password"] {
       width: 100%;
-      padding: 12px 15px;
-      margin-bottom: 20px;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 6px;
       border: none;
-      border-radius: 8px;
       font-size: 1em;
-      background: #2c2c2c;
-      color: #fff;
-      outline: none;
-      transition: background 0.3s ease;
-    }
-    input[type="password"]:focus {
-      background: #3a3a3a;
     }
     button {
       width: 100%;
-      padding: 12px 0;
-      background: #3a86ff;
+      padding: 12px;
+      border-radius: 6px;
       border: none;
-      border-radius: 8px;
+      background-color: #4caf50;
       color: white;
-      font-size: 1em;
-      font-weight: 700;
+      font-size: 1.1em;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background-color 0.3s ease;
     }
     button:hover {
-      background: #265ebf;
+      background-color: #45a049;
     }
     .error {
       color: #ff4b5c;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       font-weight: 600;
+    }
+    h2 {
+      margin: 0 0 10px;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login - Maintenance</h2>
+  <div class="login-box">
+    <h2>Maintenance Login</h2>
     {% if error %}
       <div class="error">{{ error }}</div>
     {% endif %}
     <form method="POST" action="/login">
-      <input type="password" name="password" placeholder="Enter Password" required />
+      <input type="password" name="password" placeholder="Enter password" required />
       <button type="submit">Login</button>
     </form>
   </div>
