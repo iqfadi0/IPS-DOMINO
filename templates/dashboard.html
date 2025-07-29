@@ -4,42 +4,44 @@
 <meta charset="UTF-8" />
 <title>Dashboard</title>
 <style>
-  body { font-family: Arial, sans-serif; background:#121212; color:#eee; padding:20px; }
-  header { display:flex; justify-content: space-between; align-items:center; margin-bottom:20px; }
-  a.logout { background:#ff4b5c; padding:10px 20px; color:#fff; border-radius:6px; text-decoration:none; }
+  body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
+  h1 { margin-bottom: 20px; }
   form { margin-bottom: 20px; }
-  input[type=text], input[type=tel], input[type=date] { padding:10px; border-radius:6px; border:none; margin-right:10px; }
-  button { padding:10px 20px; border:none; border-radius:6px; background:#4caf50; color:#fff; cursor:pointer; }
-  table { width:100%; border-collapse: collapse; }
-  th, td { padding:12px; border-bottom: 1px solid #444; text-align:center; }
-  tr:hover { background:#333; }
-  a.action-btn { background:#ff6f61; padding:6px 12px; border-radius:6px; color:#fff; text-decoration:none; margin:0 5px; }
-  a.action-btn.delete { background:#c0392b; }
-  form.search-form { margin-bottom: 20px; }
-  input.search-input { padding:10px; border-radius:6px; border:none; width: 300px; margin-right: 10px;}
+  input[type=text] { padding: 8px; width: 250px; border-radius: 4px; border: 1px solid #ccc; }
+  button { padding: 8px 15px; border:none; background: #28a745; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
+  button:hover { background: #218838; }
+  table { width: 100%; border-collapse: collapse; background: white; }
+  th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+  th { background: #343a40; color: white; }
+  a { text-decoration: none; padding: 5px 10px; border-radius: 4px; }
+  .edit-btn { background: #007bff; color: white; }
+  .delete-btn { background: #dc3545; color: white; }
+  .logout { float: right; margin-bottom: 10px; }
 </style>
 </head>
 <body>
-<header>
-  <h1>Customer Dashboard (Role: {{ role }})</h1>
-  <a href="{{ url_for('logout') }}" class="logout">Logout</a>
-</header>
 
-<form method="GET" action="{{ url_for('dashboard') }}" class="search-form">
-  <input type="text" name="search_name" placeholder="Search by Customer Name" class="search-input" value="{{ request.args.get('search_name', '') }}" />
+<div>
+  <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+  <h1>Customer Maintenance Dashboard</h1>
+</div>
+
+<form method="GET" action="{{ url_for('dashboard') }}">
+  <input type="text" name="search_name" placeholder="Search by name" value="{{ search_name|default('') }}">
   <button type="submit">Search</button>
 </form>
 
-<form method="POST">
-  <input type="text" name="name" placeholder="Customer Name" required />
-  <input type="tel" name="phone" placeholder="Phone Number" required />
+{% if role in ['admin', 'user'] %}
+<form method="POST" style="margin-bottom:20px;">
+  <input type="text" name="name" placeholder="Customer Name" required>
   <button type="submit">Add Customer</button>
 </form>
+{% endif %}
 
 <table>
   <thead>
     <tr>
-      <th>ID</th><th>Name</th><th>Phone</th><th>Start Date</th><th>End Date</th><th>Actions</th>
+      <th>ID</th><th>Name</th><th>Start Date</th><th>End Date</th><th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -49,18 +51,18 @@
       <td>{{ c[1] }}</td>
       <td>{{ c[2] }}</td>
       <td>{{ c[3] }}</td>
-      <td>{{ c[4] }}</td>
       <td>
-        <a href="{{ url_for('edit', id=c[0]) }}" class="action-btn">Edit</a>
+        <a href="{{ url_for('edit', id=c[0]) }}" class="edit-btn">Edit</a>
         {% if role == 'admin' %}
-        <a href="{{ url_for('delete', id=c[0]) }}" class="action-btn delete" onclick="return confirm('Confirm delete?');">Delete</a>
+        <a href="{{ url_for('delete', id=c[0]) }}" class="delete-btn" onclick="return confirm('Are you sure?')">Delete</a>
         {% endif %}
       </td>
     </tr>
     {% else %}
-    <tr><td colspan="6">No customers found.</td></tr>
+    <tr><td colspan="5">No customers found.</td></tr>
     {% endfor %}
   </tbody>
 </table>
+
 </body>
 </html>
