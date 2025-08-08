@@ -15,6 +15,10 @@
                 | <a href="{{ url_for('admin_area') }}">Admin</a>
                 | <a href="{{ url_for('admin_logout') }}">Logout</a>
             {% endif %}
+            <!-- زر التبديل للوضع الداكن -->
+            <button id="toggleThemeBtn" title="Toggle Dark/Light Mode" style="margin-left: 15px; padding: 5px 10px; cursor: pointer;">
+                🌙
+            </button>
         </nav>
     </header>
     <main>
@@ -32,5 +36,27 @@
     <footer>
         <p>© 2025 I.P.S Domino</p>
     </footer>
+
+    <script>
+      const toggleBtn = document.getElementById('toggleThemeBtn');
+      const body = document.body;
+
+      // استعادة الوضع من localStorage
+      if(localStorage.getItem('theme') === 'dark'){
+        body.classList.add('dark-mode');
+        toggleBtn.textContent = '☀️';
+      }
+
+      toggleBtn.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        if(body.classList.contains('dark-mode')){
+          toggleBtn.textContent = '☀️';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          toggleBtn.textContent = '🌙';
+          localStorage.setItem('theme', 'light');
+        }
+      });
+    </script>
 </body>
 </html>
