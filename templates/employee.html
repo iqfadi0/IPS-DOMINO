@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Employee Area{% endblock %}
+{% block content %}
+<h2>Employee Area - Add / Edit Customers</h2>
+
+<form method="get" action="{{ url_for('employee_area') }}">
+    <input type="text" name="search" placeholder="Search by name" value="{{ search_query }}">
+    <button type="submit">Search</button>
+</form>
+
+<form method="post" action="{{ url_for('employee_area') }}" class="add-form">
+    <input type="text" name="name" placeholder="Customer Name" required>
+    <button type="submit">Add Customer</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Date Added</th>
+            <th>Expiry Date</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c in customers %}
+        <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.date_added.strftime('%Y-%m-%d') }}</td>
+            <td>{{ c.expiry_date.strftime('%Y-%m-%d') }}</td>
+            <td><a href="{{ url_for('edit_customer', customer_id=c.id) }}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
