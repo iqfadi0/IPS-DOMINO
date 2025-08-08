@@ -10,7 +10,6 @@
     <header>
         <h1>Maintenance Customer Management</h1>
         <nav>
-            <a href="{{ url_for('employee_area') }}">Employee</a>
             {% if session.get('admin_logged_in') %}
                 | <a href="{{ url_for('admin_area') }}">Admin</a>
                 | <a href="{{ url_for('admin_logout') }}">Logout</a>
